@@ -146,8 +146,17 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo -e "Committing changes..."
   git commit -m "Initial commit of Substreams Contract Reviewer"
   
+  # Check if we're on master or main branch
+  CURRENT_BRANCH=$(git branch --show-current)
+  if [ -z "$CURRENT_BRANCH" ]; then
+    # No branch yet, create one
+    git branch -m main
+    CURRENT_BRANCH="main"
+    echo -e "${GREEN}✓ Created 'main' branch${NC}"
+  fi
+  
   echo -e "Pushing to GitHub..."
-  git push -u origin master
+  git push -u origin $CURRENT_BRANCH
   
   echo -e "${GREEN}✓ Code pushed to GitHub${NC}"
   echo -e "You can now view your repository at: https://github.com/PaulieB14/substreams-contract-reviewer"

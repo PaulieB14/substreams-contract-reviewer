@@ -60,4 +60,11 @@ jobs:
           # Add and commit
           git add ./results/
           git commit -m "Add contract data for ${{ steps.timestamp.outputs.date }}" || echo "No changes to commit"
-          git push
+          # Determine which branch we're on
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          if [ "$BRANCH" = "HEAD" ]; then
+            # We're in detached HEAD state, use the default branch
+            BRANCH="main"
+          fi
+          
+          git push origin $BRANCH
