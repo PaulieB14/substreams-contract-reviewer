@@ -8,6 +8,8 @@ on:
 jobs:
   process-contracts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Needed for pushing to the repository
     
     steps:
       - name: Checkout code
@@ -22,9 +24,14 @@ jobs:
       
       - name: Install Substreams CLI
         run: |
-          curl -L https://github.com/streamingfast/substreams/releases/download/v1.1.0/substreams_linux_x86_64.tar.gz | tar zxf -
+          # Download the latest release directly
+          SUBSTREAMS_VERSION="v1.1.11"
+          wget -q "https://github.com/streamingfast/substreams/releases/download/${SUBSTREAMS_VERSION}/substreams_${SUBSTREAMS_VERSION}_linux_x86_64.tar.gz"
+          tar -xzf "substreams_${SUBSTREAMS_VERSION}_linux_x86_64.tar.gz"
           chmod +x substreams
           sudo mv substreams /usr/local/bin/
+          # Verify installation
+          substreams --version
       
       - name: Install jq
         run: sudo apt-get install -y jq
