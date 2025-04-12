@@ -6,11 +6,13 @@ on:
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
-  # First job: Process contracts and commit results
-  process-contracts:
+  # Single job to process data and deploy dashboard
+  process-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Needed for pushing to the repository
+      pages: write     # Needed for GitHub Pages deployment
+      id-token: write  # Needed for GitHub Pages deployment
     
     steps:
       - name: Checkout code
@@ -24,7 +26,6 @@ jobs:
       - name: Run Python script to generate contract data
         run: |
           # Run the Python script to generate mock contract data
-          # In a real implementation, this would use the Substreams CLI
           python process_contracts.py
       
       - name: Create timestamp
@@ -45,42 +46,13 @@ jobs:
           # Add and commit
           git add ./results/
           git commit -m "Add contract data for ${{ steps.timestamp.outputs.date }}" || echo "No changes to commit"
-          # Determine which branch we're on
-          BRANCH=$(git rev-parse --abbrev-ref HEAD)
-          if [ "$BRANCH" = "HEAD" ]; then
-            # We're in detached HEAD state, use the default branch
-            BRANCH="main"
-          fi
-          
-          git push origin $BRANCH
-
-  # Second job: Deploy dashboard to GitHub Pages
-  deploy-dashboard:
-    needs: process-contracts
-    runs-on: ubuntu-latest
-    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    # Allow only one concurrent deployment
-    concurrency:
-      group: "pages"
-      cancel-in-progress: true
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: main  # Ensure we're using the main branch with the latest data
+          git push origin HEAD:main
       
+      # GitHub Pages deployment
       - name: Setup Pages
         uses: actions/configure-pages@v3
       
-      - name: Build dashboard
+      - name: Build dashboard site
         run: |
           # Create a directory for the GitHub Pages site
           mkdir -p _site
@@ -92,7 +64,7 @@ jobs:
           mkdir -p _site/results
           cp results/latest_analysis.json _site/results/ || echo "No analysis file found, dashboard may not display data correctly"
       
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v1
         with:
           path: '_site'
