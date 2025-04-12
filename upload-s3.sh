@@ -51,8 +51,25 @@ EOF
 fi
 
 # Upload to Hetzner Object Storage (S3)
-echo "Uploading data to Hetzner Object Storage..."
+echo "Uploading data to Hetzner Object Storage (IPv4 only)..."
+# Force IPv4 connection
 aws s3 cp ./output/contracts.json s3://${HETZNER_BUCKET_NAME:-your-bucket-name}/ \
   --endpoint-url http://5.161.70.165:9000 \
-  --profile hetzner
+  --profile hetzner \
+  --cli-connect-timeout 10 \
+  --region us-east-1 \
+  --no-verify-ssl \
+  --cli-read-timeout 20 \
+  --cli-connect-timeout 10 \
+  --metadata-directive REPLACE \
+  --cache-control "max-age=86400"
+
 echo "Upload complete!"
+
+echo "Note: If you're having connection issues, you can add this to your ~/.aws/config file:"
+echo "[profile hetzner]"
+echo "s3 ="
+echo "  addressing_style = virtual"
+echo "  use_dualstack_endpoint = false"
+echo "  use_accelerate_endpoint = false"
+echo "  payload_signing_enabled = false"

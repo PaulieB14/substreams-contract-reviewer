@@ -64,15 +64,23 @@ echo "Updated state file with last processed block: $CURRENT_BLOCK"
 # Configure rclone if not already configured
 if ! rclone listremotes | grep -q "hetzner:"; then
   echo "Configuring rclone for Hetzner Storage Box..."
+  # Force IPv4 for SFTP connection
   rclone config create hetzner sftp \
     host=5.161.70.165 \
     user=${HETZNER_USERNAME:-your-username} \
-    pass=${HETZNER_PASSWORD:-your-password}
+    pass=${HETZNER_PASSWORD:-your-password} \
+    use_insecure_cipher=true \
+    md5sum_command=none \
+    sha1sum_command=none \
+    ipv4=true
+
+  echo "Rclone configured to use IPv4 only."
 fi
 
 # Sync to Hetzner Storage Box using rclone
-echo "Syncing data to Hetzner Storage Box..."
-rclone copy ./output hetzner:substreams-data
+echo "Syncing data to Hetzner Storage Box (IPv4 only)..."
+# The --ipv4 flag forces rclone to use IPv4 only
+rclone copy --ipv4 ./output hetzner:substreams-data
 echo "Sync complete!"
 
 echo "Completed processing up to block $CURRENT_BLOCK"

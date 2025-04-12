@@ -25,13 +25,13 @@ if [ ! -f ~/.ssh/id_rsa ]; then
   echo "SSH key created."
 fi
 
-# Copy SSH key to Hetzner server
-echo "Copying SSH key to Hetzner server..."
-ssh-copy-id -i ~/.ssh/id_rsa.pub ${HETZNER_USER}@${HETZNER_IP}
+# Copy SSH key to Hetzner server (force IPv4)
+echo "Copying SSH key to Hetzner server (IPv4 only)..."
+ssh-copy-id -4 -i ~/.ssh/id_rsa.pub ${HETZNER_USER}@${HETZNER_IP}
 
-# Create bare Git repository on Hetzner server
-echo "Creating bare Git repository on Hetzner server..."
-ssh ${HETZNER_USER}@${HETZNER_IP} "mkdir -p $(dirname $REPO_PATH) && git init --bare $REPO_PATH"
+# Create bare Git repository on Hetzner server (force IPv4)
+echo "Creating bare Git repository on Hetzner server (IPv4 only)..."
+ssh -4 ${HETZNER_USER}@${HETZNER_IP} "mkdir -p $(dirname $REPO_PATH) && git init --bare $REPO_PATH"
 
 # Add Hetzner as a remote repository
 echo "Adding Hetzner as a remote repository..."
