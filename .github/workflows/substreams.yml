@@ -6,12 +6,11 @@ on:
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
+  # First job: Process contracts and commit results
   process-contracts:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Needed for pushing to the repository
-      pages: write     # Needed for GitHub Pages deployment
-      id-token: write  # Needed for GitHub Pages deployment
     
     steps:
       - name: Checkout code
@@ -54,6 +53,29 @@ jobs:
           fi
           
           git push origin $BRANCH
+
+  # Second job: Deploy dashboard to GitHub Pages
+  deploy-dashboard:
+    needs: process-contracts
+    runs-on: ubuntu-latest
+    # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    # Allow only one concurrent deployment
+    concurrency:
+      group: "pages"
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main  # Ensure we're using the main branch with the latest data
       
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -68,10 +90,12 @@ jobs:
           
           # Copy the latest analysis for the dashboard to use
           mkdir -p _site/results
-          cp results/latest_analysis.json _site/results/
+          cp results/latest_analysis.json _site/results/ || echo "No analysis file found, dashboard may not display data correctly"
       
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '_site'
       
       - name: Deploy to GitHub Pages
         id: deployment
