@@ -1,0 +1,30 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Environment variables and secrets
+.env
+*.pem
+*.key
+
+# Output files
+/output/
+*.json
+*.csv
+*.log
+last_block.txt
+
+# Hetzner credentials
+.rclone.conf
+.aws/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
