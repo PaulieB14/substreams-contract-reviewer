@@ -22,32 +22,27 @@ jobs:
           target: wasm32-unknown-unknown
           override: true
       
-      - name: Install Substreams CLI
-        run: |
-          # Download the latest release directly
-          SUBSTREAMS_VERSION="v1.1.11"
-          wget -q "https://github.com/streamingfast/substreams/releases/download/${SUBSTREAMS_VERSION}/substreams_${SUBSTREAMS_VERSION}_linux_x86_64.tar.gz"
-          tar -xzf "substreams_${SUBSTREAMS_VERSION}_linux_x86_64.tar.gz"
-          chmod +x substreams
-          sudo mv substreams /usr/local/bin/
-          # Verify installation
-          substreams --version
-      
-      - name: Install jq
-        run: sudo apt-get install -y jq
-      
       - name: Build Substreams WASM module
         run: cargo build --target wasm32-unknown-unknown --release
       
-      - name: Run Substreams
+      - name: Run Substreams using Docker
         env:
           SUBSTREAMS_API_KEY: ${{ secrets.SUBSTREAMS_API_KEY }}
         run: |
           mkdir -p output
-          substreams run -e ${{ secrets.SUBSTREAMS_API_KEY }}@mainnet.eth.streamingfast.io:443 \
+          
+          # Use the official StreamingFast Docker image that has Substreams pre-installed
+          docker run --rm \
+            -v $(pwd):/app \
+            -w /app \
+            ghcr.io/streamingfast/substreams:latest \
+            run -e ${SUBSTREAMS_API_KEY}@mainnet.eth.streamingfast.io:443 \
             substreams.yaml map_contract_usage \
             --start-block 16000000 --stop-block +1000 \
-            | jq -c '.contracts[]' > ./output/contracts.json
+            > ./output/substreams_output.json
+          
+          # Process the output with jq
+          cat ./output/substreams_output.json | jq -c '.contracts[]' > ./output/contracts.json
       
       - name: Create timestamp
         id: timestamp

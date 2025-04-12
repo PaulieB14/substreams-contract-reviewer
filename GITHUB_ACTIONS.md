@@ -52,9 +52,10 @@ After the workflow completes:
 The GitHub Actions workflow (`.github/workflows/substreams.yml`) does the following:
 
 1. **Builds the Substreams WASM Module**: Compiles your Rust code to WebAssembly
-2. **Runs the Substreams**: Processes Ethereum contract data using your API key
-3. **Saves the Results**: Stores the output in the 'results' directory
-4. **Commits and Pushes**: Automatically commits the results back to your repository
+2. **Runs the Substreams using Docker**: Uses the official StreamingFast Docker image to run Substreams
+3. **Processes the Output**: Formats the data using jq
+4. **Saves the Results**: Stores the output in the 'results' directory with a timestamp
+5. **Commits and Pushes**: Automatically commits the results back to your repository
 
 ## Scheduled Runs
 
