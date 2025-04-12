@@ -3,163 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contract Reviewer Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <title>Ethereum Contract Reviewer Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { padding: 20px; }
-        .card { margin-bottom: 20px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .chart-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .stats-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stats-label {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+        .contract-address {
+            font-family: monospace;
+            background-color: #f8f9fa;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: right;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4">Contract Reviewer Dashboard</h1>
-        
+        <div class="header">
+            <h1>Ethereum Contract Reviewer Dashboard</h1>
+            <p>Analyzing smart contract usage across the Ethereum blockchain</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" id="total-contracts">-</div>
+                    <div class="stats-label">Total Contracts Analyzed</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" id="most-active-calls">-</div>
+                    <div class="stats-label">Most Active Contract Calls</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card">
+                    <div class="stats-number" id="most-wallets">-</div>
+                    <div class="stats-label">Most Unique Wallets</div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Contract Activity Overview</h5>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="activityChart"></canvas>
-                    </div>
+                <div class="chart-container">
+                    <h3>Most Active Contracts (by Total Calls)</h3>
+                    <canvas id="activityChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Top Contracts by Unique Wallets</h5>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="walletsChart"></canvas>
+                <div class="chart-container">
+                    <h3>Most Popular Contracts (by Unique Wallets)</h3>
+                    <canvas id="walletsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h3>Most Intensive Contracts (by Avg Calls per Wallet)</h3>
+                    <canvas id="intensityChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h3>Newest Contracts</h3>
+                    <canvas id="newestChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="chart-container">
+                    <h3>Top 10 Most Active Contracts</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Contract Address</th>
+                                    <th>First Block</th>
+                                    <th>Last Block</th>
+                                    <th>Total Calls</th>
+                                    <th>Unique Wallets</th>
+                                    <th>Avg Calls/Wallet</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contracts-table">
+                                <tr>
+                                    <td colspan="6" class="text-center">Loading data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h5>Recent Contracts</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Contract Address</th>
-                                <th>First Interaction</th>
-                                <th>Last Interaction</th>
-                                <th>Total Calls</th>
-                                <th>Unique Wallets</th>
-                            </tr>
-                        </thead>
-                        <tbody id="contractsTable">
-                            <tr>
-                                <td colspan="5" class="text-center">Loading data...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+
+        <div class="timestamp" id="timestamp">Last updated: -</div>
     </div>
 
     <script>
-        // Sample data - this would be replaced with actual data from your API
-        const sampleData = [
-            { address: "0x1234567890abcdef1234567890abcdef12345678", first_interaction_block: 16000000, last_interaction_block: 16001000, total_calls: 150, unique_wallets: 45 },
-            { address: "0xabcdef1234567890abcdef1234567890abcdef12", first_interaction_block: 16000100, last_interaction_block: 16000900, total_calls: 120, unique_wallets: 35 },
-            { address: "0x7890abcdef1234567890abcdef1234567890abcd", first_interaction_block: 16000200, last_interaction_block: 16000800, total_calls: 100, unique_wallets: 30 },
-            { address: "0x567890abcdef1234567890abcdef1234567890ab", first_interaction_block: 16000300, last_interaction_block: 16000700, total_calls: 80, unique_wallets: 25 },
-            { address: "0x34567890abcdef1234567890abcdef1234567890", first_interaction_block: 16000400, last_interaction_block: 16000600, total_calls: 60, unique_wallets: 20 }
-        ];
+        // Function to format contract addresses
+        function formatAddress(address) {
+            if (!address) return '-';
+            return address.substring(0, 6) + '...' + address.substring(address.length - 4);
+        }
 
-        // Populate table
-        function populateTable(data) {
-            const tableBody = document.getElementById('contractsTable');
+        // Function to format numbers with commas
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Function to create a bar chart
+        function createBarChart(canvasId, labels, data, label, backgroundColor) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderColor: backgroundColor.map(color => color.replace('0.5', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to populate the table
+        function populateTable(contracts) {
+            const tableBody = document.getElementById('contracts-table');
             tableBody.innerHTML = '';
             
-            data.forEach(contract => {
+            contracts.forEach(contract => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><a href="https://etherscan.io/address/${contract.address}" target="_blank">${contract.address.substring(0, 10)}...</a></td>
-                    <td>${contract.first_interaction_block}</td>
-                    <td>${contract.last_interaction_block}</td>
-                    <td>${contract.total_calls}</td>
-                    <td>${contract.unique_wallets}</td>
+                    <td><span class="contract-address">${formatAddress(contract.address)}</span></td>
+                    <td>${formatNumber(contract.first_interaction_block)}</td>
+                    <td>${formatNumber(contract.last_interaction_block)}</td>
+                    <td>${formatNumber(contract.total_calls)}</td>
+                    <td>${formatNumber(contract.unique_wallets)}</td>
+                    <td>${contract.avg_calls_per_wallet.toFixed(2)}</td>
                 `;
                 tableBody.appendChild(row);
             });
         }
 
-        // Create charts
-        function createCharts(data) {
-            // Activity Chart
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
-            new Chart(activityCtx, {
-                type: 'bar',
-                data: {
-                    labels: data.map(c => c.address.substring(0, 10) + '...'),
-                    datasets: [{
-                        label: 'Total Calls',
-                        data: data.map(c => c.total_calls),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Wallets Chart
-            const walletsCtx = document.getElementById('walletsChart').getContext('2d');
-            new Chart(walletsCtx, {
-                type: 'pie',
-                data: {
-                    labels: data.map(c => c.address.substring(0, 10) + '...'),
-                    datasets: [{
-                        label: 'Unique Wallets',
-                        data: data.map(c => c.unique_wallets),
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(153, 102, 255, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                }
-            });
+        // Function to update the dashboard with data
+        function updateDashboard(data) {
+            // Update stats
+            document.getElementById('total-contracts').textContent = formatNumber(data.total_contracts_analyzed);
+            document.getElementById('most-active-calls').textContent = formatNumber(data.most_active_contracts[0].total_calls);
+            document.getElementById('most-wallets').textContent = formatNumber(data.most_popular_contracts[0].unique_wallets);
+            
+            // Format timestamp
+            const timestamp = new Date(data.analysis_timestamp);
+            document.getElementById('timestamp').textContent = `Last updated: ${timestamp.toLocaleString()}`;
+            
+            // Create charts
+            const colors = [
+                'rgba(54, 162, 235, 0.5)', 'rgba(255, 99, 132, 0.5)', 
+                'rgba(255, 206, 86, 0.5)', 'rgba(75, 192, 192, 0.5)',
+                'rgba(153, 102, 255, 0.5)', 'rgba(255, 159, 64, 0.5)',
+                'rgba(199, 199, 199, 0.5)', 'rgba(83, 102, 255, 0.5)',
+                'rgba(40, 167, 69, 0.5)', 'rgba(220, 53, 69, 0.5)'
+            ];
+            
+            // Activity chart
+            createBarChart(
+                'activityChart',
+                data.most_active_contracts.map(c => formatAddress(c.address)),
+                data.most_active_contracts.map(c => c.total_calls),
+                'Total Calls',
+                colors
+            );
+            
+            // Wallets chart
+            createBarChart(
+                'walletsChart',
+                data.most_popular_contracts.map(c => formatAddress(c.address)),
+                data.most_popular_contracts.map(c => c.unique_wallets),
+                'Unique Wallets',
+                colors.map(c => c.replace('235', '132').replace('54', '255').replace('162', '99'))
+            );
+            
+            // Intensity chart
+            createBarChart(
+                'intensityChart',
+                data.most_intensive_contracts.map(c => formatAddress(c.address)),
+                data.most_intensive_contracts.map(c => c.avg_calls_per_wallet),
+                'Avg Calls per Wallet',
+                colors.map(c => c.replace('235', '86').replace('54', '255').replace('162', '206'))
+            );
+            
+            // Newest chart
+            createBarChart(
+                'newestChart',
+                data.newest_contracts.map(c => formatAddress(c.address)),
+                data.newest_contracts.map(c => c.first_interaction_block),
+                'First Interaction Block',
+                colors.map(c => c.replace('235', '192').replace('54', '75').replace('162', '192'))
+            );
+            
+            // Populate table
+            populateTable(data.most_active_contracts);
         }
 
-        // Initialize with sample data
-        document.addEventListener('DOMContentLoaded', () => {
-            populateTable(sampleData);
-            createCharts(sampleData);
-            
-            // In a real implementation, you would fetch data from your API
-            // fetch('/api/contracts')
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         populateTable(data);
-            //         createCharts(data);
-            //     });
-        });
+        // Fetch the latest analysis data
+        fetch('../results/latest_analysis.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                updateDashboard(data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                document.getElementById('contracts-table').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">
+                            Error loading data. Please try again later.
+                        </td>
+                    </tr>
+                `;
+            });
     </script>
 </body>
 </html>

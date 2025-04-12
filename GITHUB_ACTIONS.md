@@ -52,13 +52,26 @@ After the workflow completes:
 The GitHub Actions workflow (`.github/workflows/substreams.yml`) does the following:
 
 1. **Sets up Python**: Configures a Python environment on the GitHub runner
-2. **Runs a Python Script**: Executes `process_contracts.py` to generate contract data
-   - This script creates mock contract data for demonstration purposes
-   - In a real implementation, this would use the Substreams CLI to process Ethereum data
+2. **Runs a Python Script**: Executes `process_contracts.py` to generate and analyze contract data
+   - Attempts to use the Substreams CLI if available
+   - Falls back to generating mock data if Substreams CLI is not available
+   - Performs analysis on the contract data to extract insights
 3. **Saves the Results**: Stores the output in the 'results' directory with a timestamp
 4. **Commits and Pushes**: Automatically commits the results back to your repository
+5. **Deploys Dashboard**: Builds and deploys a web dashboard to GitHub Pages
 
-> **Note**: The current implementation uses a Python script to generate mock data instead of actually running Substreams. This approach is more reliable for demonstration purposes and avoids the complexities of setting up the Substreams CLI in GitHub Actions.
+> **Note**: The enhanced implementation now includes data analysis and a web dashboard for visualizing the results. The Python script will attempt to use the real Substreams CLI if available, but will fall back to mock data generation if needed.
+
+## Dashboard Features
+
+The dashboard provides a visual representation of the contract data:
+
+- **Overview Statistics**: Total contracts analyzed, most active contract calls, etc.
+- **Interactive Charts**: Visualize the most active and popular contracts
+- **Detailed Tables**: View detailed information about the top contracts
+- **Automatic Updates**: The dashboard is automatically updated with each workflow run
+
+You can access the dashboard at: `https://[your-github-username].github.io/substreams-contract-reviewer/`
 
 ## Scheduled Runs
 

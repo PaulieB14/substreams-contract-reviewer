@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # Needed for pushing to the repository
+      pages: write     # Needed for GitHub Pages deployment
+      id-token: write  # Needed for GitHub Pages deployment
     
     steps:
       - name: Checkout code
@@ -52,3 +54,25 @@ jobs:
           fi
           
           git push origin $BRANCH
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      
+      - name: Build dashboard
+        run: |
+          # Create a directory for the GitHub Pages site
+          mkdir -p _site
+          
+          # Copy the dashboard files
+          cp -r dashboard/* _site/
+          
+          # Copy the latest analysis for the dashboard to use
+          mkdir -p _site/results
+          cp results/latest_analysis.json _site/results/
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
