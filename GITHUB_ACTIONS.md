@@ -51,12 +51,14 @@ After the workflow completes:
 
 The GitHub Actions workflow (`.github/workflows/substreams.yml`) does the following:
 
-1. **Builds the Substreams WASM Module**: Compiles your Rust code to WebAssembly
-2. **Installs the Substreams CLI**: Downloads and installs the Substreams CLI directly
-3. **Runs the Substreams**: Processes Ethereum contract data using your API key
-4. **Processes the Output**: Formats the data using jq with error handling
-5. **Saves the Results**: Stores the output in the 'results' directory with a timestamp
-6. **Commits and Pushes**: Automatically commits the results back to your repository
+1. **Sets up Python**: Configures a Python environment on the GitHub runner
+2. **Runs a Python Script**: Executes `process_contracts.py` to generate contract data
+   - This script creates mock contract data for demonstration purposes
+   - In a real implementation, this would use the Substreams CLI to process Ethereum data
+3. **Saves the Results**: Stores the output in the 'results' directory with a timestamp
+4. **Commits and Pushes**: Automatically commits the results back to your repository
+
+> **Note**: The current implementation uses a Python script to generate mock data instead of actually running Substreams. This approach is more reliable for demonstration purposes and avoids the complexities of setting up the Substreams CLI in GitHub Actions.
 
 ## Scheduled Runs
 
