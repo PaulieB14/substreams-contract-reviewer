@@ -30,7 +30,7 @@ jobs:
       
       - name: Create timestamp
         id: timestamp
-        run: echo "::set-output name=date::$(date +'%Y%m%d_%H%M%S')"
+        run: echo "date=$(date +'%Y%m%d_%H%M%S')" >> $GITHUB_OUTPUT
       
       - name: Commit and push results
         run: |
@@ -70,8 +70,8 @@ jobs:
           mkdir -p _site/results
           cp results/latest_analysis.json _site/results/
       
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v2
       
       - name: Deploy to GitHub Pages
         id: deployment
