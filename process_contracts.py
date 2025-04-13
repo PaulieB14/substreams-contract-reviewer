@@ -22,20 +22,32 @@ def run_substreams(start_block=17500000, block_count=50):
     print("Running Substreams CLI to get real blockchain data...")
     print(f"Processing {block_count} blocks starting from block {start_block}")
     
-    # Check if API key is set
-    api_key = os.environ.get("SUBSTREAMS_API_KEY")
-    if not api_key:
-        raise ValueError("SUBSTREAMS_API_KEY environment variable is required")
+    # Check if the JWT token is set in the environment
+    jwt_token = os.environ.get("SUBSTREAMS_API_TOKEN")
+    if not jwt_token:
+        # Try to load from .env file if not in environment
+        try:
+            with open('.env', 'r') as f:
+                for line in f:
+                    if line.strip() and not line.startswith('#'):
+                        key, value = line.strip().split('=', 1)
+                        if key == "SUBSTREAMS_API_TOKEN":
+                            jwt_token = value
+                            break
+        except Exception as e:
+            print(f"Error loading .env file: {e}")
     
-    # Set the API key as an environment variable for the subprocess
+    if not jwt_token:
+        raise ValueError("SUBSTREAMS_API_TOKEN environment variable is required")
+    
+    # Set up environment variables for the subprocess
     env = os.environ.copy()
-    env["SUBSTREAMS_API_TOKEN"] = api_key
+    env["SUBSTREAMS_API_TOKEN"] = jwt_token
     
     # Prepare command according to Substreams documentation
     cmd = [
         "substreams", "run", 
         "-e", "mainnet.eth.streamingfast.io:443",  # Ethereum mainnet endpoint
-        "--output-mode", "json",                   # Output in JSON format
         "substreams.yaml", "map_contract_usage",   # Substreams package and module
         "--start-block", str(start_block),         # Starting block
         "--stop-block", f"+{block_count}"          # Number of blocks to process
