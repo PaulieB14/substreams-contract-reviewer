@@ -6,6 +6,9 @@
   "routes": [
     { "src": "/(.*)", "dest": "/dashboard/$1" }
   ],
+  "env": {
+    "NEXT_PUBLIC_BASE_URL": "https://substreams-contract-reviewer.vercel.app"
+  },
   "github": {
     "silent": true
   }
