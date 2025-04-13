@@ -27,17 +27,18 @@ def run_substreams(start_block=17500000, block_count=50):
     if not api_key:
         raise ValueError("SUBSTREAMS_API_KEY environment variable is required")
     
-    # According to Substreams documentation (https://docs.substreams.dev/)
-    # Prepare command with authentication
+    # Set the API key as an environment variable for the subprocess
+    env = os.environ.copy()
+    env["SUBSTREAMS_API_TOKEN"] = api_key
+    
+    # Prepare command according to Substreams documentation
     cmd = [
         "substreams", "run", 
         "-e", "mainnet.eth.streamingfast.io:443",  # Ethereum mainnet endpoint
-        "--auth-token", api_key,                   # Authentication token
         "--output-mode", "json",                   # Output in JSON format
         "substreams.yaml", "map_contract_usage",   # Substreams package and module
         "--start-block", str(start_block),         # Starting block
-        "--stop-block", f"+{block_count}",         # Number of blocks to process
-        "--production-mode"                        # Use production mode for better performance
+        "--stop-block", f"+{block_count}"          # Number of blocks to process
     ]
     
     # Run the command with a timeout
@@ -47,7 +48,8 @@ def run_substreams(start_block=17500000, block_count=50):
             capture_output=True,
             text=True,
             check=True,
-            timeout=300  # 5-minute timeout
+            timeout=300,  # 5-minute timeout
+            env=env  # Pass the environment variables with the API token
         )
         print("Substreams CLI executed successfully!")
         return json.loads(result.stdout)

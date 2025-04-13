@@ -37,6 +37,7 @@ jobs:
       - name: Run Python script with real data
         env:
           SUBSTREAMS_API_KEY: ${{ secrets.SUBSTREAMS_API_KEY }}
+          SUBSTREAMS_API_TOKEN: ${{ secrets.SUBSTREAMS_API_KEY }}
         run: |
           # Run the Python script to generate real data
           python process_contracts.py
