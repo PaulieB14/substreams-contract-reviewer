@@ -19,9 +19,19 @@ echo "Copying data to dashboard..."
 # Change to the dashboard directory
 cd dashboard-improved
 
-# Deploy to Vercel
-echo "Deploying to Vercel..."
-vercel --prod
-
-echo "Deployment complete! Your dashboard is now live on Vercel."
+# Instructions for manual deployment to Vercel
+echo "===== MANUAL DEPLOYMENT INSTRUCTIONS ====="
+echo "To deploy to Vercel, follow these steps:"
+echo "1. Go to https://vercel.com/new"
+echo "2. Import your GitHub repository (if not already connected)"
+echo "3. Select the 'dashboard-improved' directory as the root directory"
+echo "4. Configure the following settings:"
+echo "   - Framework Preset: Next.js"
+echo "   - Root Directory: dashboard-improved"
+echo "   - Build Command: next build"
+echo "   - Output Directory: .next"
+echo "5. Click 'Deploy'"
+echo ""
+echo "Your dashboard will be live at the URL provided by Vercel."
 echo "You can view your deployments at https://vercel.com/dashboard"
+echo "============================================"
