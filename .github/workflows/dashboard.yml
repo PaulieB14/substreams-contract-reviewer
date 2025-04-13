@@ -24,7 +24,17 @@ jobs:
       
       - name: Deploy to GitHub Pages
         run: |
-          # Generate a mock analysis file since the real one might not exist yet
+          # Create a new branch for GitHub Pages
+          git checkout -b gh-pages
+          
+          # Remove everything except the dashboard directory
+          find . -mindepth 1 -maxdepth 1 -not -name 'dashboard' -not -name '.git' -exec rm -rf {} \;
+          
+          # Move dashboard files to root
+          mv dashboard/* .
+          rmdir dashboard
+          
+          # Create a results directory and generate a mock analysis file
           mkdir -p results
           cat > results/latest_analysis.json << 'EOF'
           {
@@ -77,19 +87,16 @@ jobs:
               {"address": "0x5678901abcdef1234567890abcdef1234567890a", "first_interaction_block": 16035000, "last_interaction_block": 16051000, "total_calls": 1876, "unique_wallets": 76, "avg_calls_per_wallet": 24.68}
             ],
             "total_contracts_analyzed": 50,
-            "analysis_timestamp": "2025-04-12T19:42:00.000Z"
+            "analysis_timestamp": "2025-04-12T20:11:00.000Z"
           }
           EOF
           
-          # Create a new branch for GitHub Pages
-          git checkout -b gh-pages
+          # List files to verify
+          echo "Files in current directory:"
+          ls -la
           
-          # Remove everything except the dashboard directory and results directory
-          find . -mindepth 1 -maxdepth 1 -not -name 'dashboard' -not -name 'results' -not -name '.git' -exec rm -rf {} \;
-          
-          # Move dashboard files to root
-          mv dashboard/* .
-          rmdir dashboard
+          echo "Files in results directory:"
+          ls -la results/
           
           # Create a .nojekyll file to disable Jekyll processing
           touch .nojekyll
