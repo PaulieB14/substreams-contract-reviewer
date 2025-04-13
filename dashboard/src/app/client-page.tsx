@@ -72,14 +72,14 @@ export function ClientPage() {
   
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      <div className="flex-1 space-y-6 p-8 pt-6">
+      <div className="flex-1 space-y-6 p-4 sm:p-6 md:p-8 pt-6">
         <CurrentBlock />
         
         <div className="flex items-center justify-between space-y-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mt-4">
-          <h2 className="text-3xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">Ethereum Contract Reviewer Dashboard</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">Ethereum Contract Reviewer Dashboard</h2>
         </div>
         
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard
             title="Total Contracts Analyzed"
             value={data.total_contracts_analyzed}
@@ -102,7 +102,7 @@ export function ClientPage() {
           />
         </div>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {/* Contract charts */}
           <ContractChart 
             contracts={data.most_active_contracts} 
@@ -138,7 +138,7 @@ export function ClientPage() {
         
         {/* Daily Stats Chart - shows time-based analysis */}
         {data.daily_stats && data.daily_stats.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
             <DailyStatsChart 
               dailyStats={data.daily_stats} 
               title="Daily Contract Activity" 
@@ -148,7 +148,7 @@ export function ClientPage() {
             {data.new_vs_returning_contracts && (
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-bold mb-4">New vs Returning Contracts</h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
                     <p className="text-sm text-muted-foreground">New Contracts</p>
                     <p className="text-3xl font-bold text-green-600 dark:text-green-400">

@@ -51,7 +51,7 @@ export function CurrentBlock() {
       <CardContent className="p-0">
         <div className="flex flex-col md:flex-row">
           {/* Network Status */}
-          <div className="bg-black/20 p-4 flex items-center md:w-1/4">
+          <div className="bg-black/20 p-4 flex items-center justify-center md:justify-start md:w-1/4">
             <div className="mr-3 h-3 w-3 rounded-full bg-green-400 animate-pulse"></div>
             <div>
               <div className="font-medium">Ethereum Mainnet</div>
@@ -59,44 +59,86 @@ export function CurrentBlock() {
             </div>
           </div>
           
-          {/* Current Block */}
-          <div className="p-4 flex-1 flex items-center justify-center md:justify-start md:border-l border-white/10">
-            <div className="text-center md:text-left">
-              <div className="text-xs uppercase tracking-wider text-indigo-200">Current Block</div>
+          {/* Mobile view: Grid layout for the three data points */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 md:hidden w-full">
+            {/* Current Block */}
+            <div className="p-4 border-t border-white/10 flex flex-col items-center justify-center">
+              <div className="text-xs uppercase tracking-wider text-indigo-200 text-center">Current Block</div>
               {loading ? (
                 <div className="h-8 w-32 bg-white/20 animate-pulse rounded mt-1"></div>
               ) : error ? (
                 <div className="text-red-300 font-medium">Error loading</div>
               ) : (
-                <div className="font-mono text-2xl font-bold">
+                <div className="font-mono text-xl font-bold mt-1">
                   {formatNumber(blockData?.blockNumber || 0)}
                 </div>
               )}
             </div>
-          </div>
-          
-          {/* Analysis Range */}
-          <div className="p-4 flex-1 flex items-center justify-center md:justify-start md:border-l border-white/10">
-            <div className="text-center md:text-left">
-              <div className="text-xs uppercase tracking-wider text-indigo-200">3-Month Analysis Range</div>
+            
+            {/* Analysis Range */}
+            <div className="p-4 border-t border-white/10 flex flex-col items-center justify-center">
+              <div className="text-xs uppercase tracking-wider text-indigo-200 text-center">Analysis Range</div>
               {loading ? (
-                <div className="h-8 w-48 bg-white/20 animate-pulse rounded mt-1"></div>
+                <div className="h-8 w-32 bg-white/20 animate-pulse rounded mt-1"></div>
               ) : error ? (
                 <div className="text-red-300 font-medium">Error loading</div>
               ) : (
-                <div className="font-mono text-sm font-medium mt-1">
-                  Block {formatNumber(blockData?.threeMonthsAgo || 0)} → {formatNumber(blockData?.blockNumber || 0)}
+                <div className="font-mono text-xs font-medium mt-1 text-center">
+                  {formatNumber(blockData?.threeMonthsAgo || 0)} → {formatNumber(blockData?.blockNumber || 0)}
                 </div>
               )}
             </div>
+            
+            {/* Blocks Per Day */}
+            <div className="p-4 border-t border-white/10 flex flex-col items-center justify-center">
+              <div className="text-xs uppercase tracking-wider text-indigo-200 text-center">Blocks/Day</div>
+              <div className="font-mono text-lg font-medium mt-1">
+                ~{formatNumber(Math.round(blocksPerDay))}
+              </div>
+            </div>
           </div>
           
-          {/* Blocks Per Day */}
-          <div className="p-4 flex-1 flex items-center justify-center md:justify-start md:border-l border-white/10">
-            <div className="text-center md:text-left">
-              <div className="text-xs uppercase tracking-wider text-indigo-200">Blocks Per Day</div>
-              <div className="font-mono text-lg font-medium">
-                ~{formatNumber(Math.round(blocksPerDay))}
+          {/* Desktop view: Horizontal layout */}
+          <div className="hidden md:flex flex-1">
+            {/* Current Block */}
+            <div className="p-4 flex-1 flex items-center justify-start border-l border-white/10">
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-wider text-indigo-200">Current Block</div>
+                {loading ? (
+                  <div className="h-8 w-32 bg-white/20 animate-pulse rounded mt-1"></div>
+                ) : error ? (
+                  <div className="text-red-300 font-medium">Error loading</div>
+                ) : (
+                  <div className="font-mono text-2xl font-bold">
+                    {formatNumber(blockData?.blockNumber || 0)}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Analysis Range */}
+            <div className="p-4 flex-1 flex items-center justify-start border-l border-white/10">
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-wider text-indigo-200">3-Month Analysis Range</div>
+                {loading ? (
+                  <div className="h-8 w-48 bg-white/20 animate-pulse rounded mt-1"></div>
+                ) : error ? (
+                  <div className="text-red-300 font-medium">Error loading</div>
+                ) : (
+                  <div className="font-mono text-sm font-medium mt-1">
+                    Block {formatNumber(blockData?.threeMonthsAgo || 0)} → {formatNumber(blockData?.blockNumber || 0)}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Blocks Per Day */}
+            <div className="p-4 flex-1 flex items-center justify-start border-l border-white/10">
+              <div className="text-left">
+                <div className="text-xs uppercase tracking-wider text-indigo-200">Blocks Per Day</div>
+                <div className="font-mono text-lg font-medium">
+                  ~{formatNumber(Math.round(blocksPerDay))}
+                </div>
               </div>
             </div>
           </div>
