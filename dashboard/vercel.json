@@ -1,11 +1,22 @@
 {
   "version": 2,
+  "framework": "nextjs",
   "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
   "outputDirectory": ".next",
+  "public": true,
+  "regions": ["all"],
   "routes": [
     {
       "src": "/results/(.*)",
-      "dest": "/results/$1"
+      "dest": "/results/$1",
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate"
+      }
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
