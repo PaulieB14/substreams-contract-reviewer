@@ -1,9 +1,6 @@
-use substreams_ethereum::pb::eth::v2::{Block, Transaction};
-use substreams_ethereum::pb::eth::v2::transaction::TransactionTraceStatus;
+use substreams_ethereum::pb::eth::v2::Block;
 use std::collections::HashMap;
-use substreams::store::{StoreGet, StoreGetProto, StoreSetProto};
-use std::cmp::min;
-use substreams_ethereum::Function;
+use substreams::store::{StoreGet, StoreGetProto, StoreSetProto, StoreNew};
 
 const MAX_WALLETS_PER_CONTRACT: usize = 100; // Limit number of wallets stored per contract
 const NEW_CONTRACT_WINDOW: u64 = 1000; // Number of blocks to consider a contract "new"
@@ -99,7 +96,7 @@ fn store_daily_stats(contracts: ContractUsages, store: StoreSetProto<DailyContra
 #[substreams::handlers::map]
 fn map_contract_usage(block: Block) -> Result<ContractUsages, substreams::errors::Error> {
     let mut contract_map: HashMap<String, ContractUsage> = HashMap::new();
-    let day_timestamp = (block.timestamp().seconds / 86400) * 86400; // Normalize to day
+    let day_timestamp = ((block.timestamp().seconds / 86400) * 86400) as u64; // Normalize to day and convert to u64
 
     // First pass: identify contract creations to build a set of known contracts
     let mut known_contracts: std::collections::HashSet<String> = std::collections::HashSet::new();
@@ -117,28 +114,23 @@ fn map_contract_usage(block: Block) -> Result<ContractUsages, substreams::errors
         }
     }
     
-    // Process call traces for contract interactions
-    for call in block.calls() {
-        // Only process CALL type (not delegatecall, create, etc.)
-        if call.r#type != 0 {
+    // Process transactions for contract interactions
+    for tx in block.transactions() {
+        // Skip if no 'to' address or if it's empty
+        if tx.to.is_empty() {
             continue;
         }
         
-        // Skip if no 'to' address
-        if call.to.is_empty() {
-            continue;
-        }
-        
-        let contract_addr = hex::encode(&call.to);
+        let contract_addr = hex::encode(&tx.to);
         
         // More strict contract verification:
         // 1. Address is in our known contracts set from this block, OR
-        // 2. The call has function selector (input > 4 bytes) AND was successful
+        // 2. The transaction has function selector (input > 4 bytes) AND was successful
         let is_likely_contract = known_contracts.contains(&contract_addr) || 
-                                 (call.input.len() > 4 && call.success);
+                                 (tx.input.len() > 4 && tx.status == 1);
         
         if is_likely_contract {
-            let from_addr = hex::encode(&call.from);
+            let from_addr = hex::encode(&tx.from);
             
             // Check if contract exists in our map
             if let Some(usage) = contract_map.get_mut(&contract_addr) {
