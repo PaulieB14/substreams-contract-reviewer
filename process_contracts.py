@@ -19,56 +19,44 @@ os.makedirs("dashboard", exist_ok=True)
 
 def run_substreams(start_block=16000000, block_count=1000):
     """Run Substreams CLI and return the output."""
+    print("Running Substreams CLI to get real blockchain data...")
+    
+    # Check if API key is set
+    api_key = os.environ.get("SUBSTREAMS_API_KEY")
+    if not api_key:
+        raise ValueError("SUBSTREAMS_API_KEY environment variable is required")
+    
+    # According to Substreams documentation (https://docs.substreams.dev/)
+    # Prepare command with authentication
+    cmd = [
+        "substreams", "run", 
+        "-e", "mainnet.eth.streamingfast.io:443",  # Ethereum mainnet endpoint
+        "--auth-token", api_key,                   # Authentication token
+        "--output-mode", "json",                   # Output in JSON format
+        "substreams.yaml", "map_contract_usage",   # Substreams package and module
+        "--start-block", str(start_block),         # Starting block
+        "--stop-block", f"+{block_count}",         # Number of blocks to process
+        "--production-mode"                        # Use production mode for better performance
+    ]
+    
+    # Run the command
     try:
-        # Try to run the actual Substreams CLI if available
-        print("Attempting to run Substreams CLI...")
         result = subprocess.run(
-            [
-                "substreams", "run", 
-                "-e", "mainnet.eth.streamingfast.io:443",
-                "substreams.yaml", "map_contract_usage",
-                "--start-block", str(start_block),
-                "--stop-block", f"+{block_count}"
-            ],
+            cmd,
             capture_output=True,
             text=True,
             check=True
         )
         print("Substreams CLI executed successfully!")
         return json.loads(result.stdout)
-    except (subprocess.SubprocessError, FileNotFoundError) as e:
-        print(f"Substreams CLI not available: {e}")
-        print("Falling back to mock data...")
-        return None
-
-# Generate mock contract data
-def generate_mock_contract():
-    """Generate a mock contract with random data."""
-    # Random contract address
-    address = "0x" + "".join(random.choice("0123456789abcdef") for _ in range(40))
-    
-    # Random block numbers
-    first_block = random.randint(16000000, 16100000)
-    last_block = first_block + random.randint(1000, 10000)
-    
-    # Random stats
-    total_calls = random.randint(100, 10000)
-    unique_wallets = random.randint(10, 1000)
-    
-    # Generate some random wallet addresses
-    wallets = [
-        "0x" + "".join(random.choice("0123456789abcdef") for _ in range(40))
-        for _ in range(min(unique_wallets, 20))  # Limit to 20 for brevity
-    ]
-    
-    return {
-        "address": address,
-        "first_interaction_block": first_block,
-        "last_interaction_block": last_block,
-        "total_calls": total_calls,
-        "unique_wallets": unique_wallets,
-        "interacting_wallets": wallets
-    }
+    except subprocess.SubprocessError as e:
+        print(f"Error running Substreams CLI: {e}")
+        print(f"Command output: {e.stdout if hasattr(e, 'stdout') else 'No output'}")
+        print(f"Command error: {e.stderr if hasattr(e, 'stderr') else 'No error'}")
+        raise RuntimeError("Failed to get real data from Substreams") from e
+    except FileNotFoundError as e:
+        print(f"Substreams CLI not found: {e}")
+        raise RuntimeError("Substreams CLI is not installed") from e
 
 def analyze_contracts(contracts):
     """Analyze contract data to extract insights."""
@@ -97,15 +85,14 @@ def analyze_contracts(contracts):
         "analysis_timestamp": datetime.now().isoformat()
     }
 
-# Try to get data from Substreams, fall back to mock data if needed
+# Get real data from Substreams
 substreams_data = run_substreams()
-if substreams_data:
-    contracts = substreams_data.get("contracts", [])
-    print(f"Retrieved {len(contracts)} contracts from Substreams")
-else:
-    # Generate a list of mock contracts
-    contracts = [generate_mock_contract() for _ in range(50)]
-    print(f"Generated {len(contracts)} mock contracts")
+contracts = substreams_data.get("contracts", [])
+print(f"Retrieved {len(contracts)} contracts from Substreams")
+
+# Ensure we have data
+if not contracts:
+    raise RuntimeError("No contract data retrieved from Substreams")
 
 # Save to output file
 with open("output/contracts.json", "w") as f:
