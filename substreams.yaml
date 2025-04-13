@@ -20,7 +20,6 @@ modules:
     initialBlock: 0
     inputs:
       - source: sf.ethereum.type.v2.Block
-      - store: store_contract_stats
     output:
       type: proto:contract_reviewer.ContractUsages
 
