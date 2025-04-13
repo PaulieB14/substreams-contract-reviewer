@@ -10,8 +10,13 @@ Cargo.lock
 
 # Output files
 /output/
-*.json
 *.csv
+# Exclude package.json from being ignored
+!package.json
+!*/package.json
+# But still ignore data files
+/results/*.json
+/dashboard/public/results/*.json
 *.log
 last_block.txt
 
