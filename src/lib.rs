@@ -97,7 +97,19 @@ fn store_daily_stats(contracts: ContractUsages, store: StoreSetProto<DailyContra
 }
 
 // Helper function to check if an address is a contract
-fn is_contract_address(trx: &Transaction) -> bool {
+fn is_contract_address(trx: &Transaction, block: &Block) -> bool {
+    // Best method: Check if the account has code (only contracts have code)
+    if let Some(to) = &trx.to {
+        let address = to.clone();
+        let account = block.account_state_deltas.iter().find(|a| a.address == address);
+        
+        // If we have account state data and the code is not empty, it's definitely a contract
+        if let Some(acc) = account {
+            return !acc.code.is_empty();
+        }
+    }
+    
+    // Fallback method if account state is not available:
     // Check if the transaction has trace status
     if let Some(trace_status) = &trx.trace_status {
         // Check if it's a contract call (has function calls)
@@ -121,8 +133,8 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
 
     for trx in block.transactions() {
     // Only process transactions that have a 'to' address and are contract calls
-    // Skip regular wallet-to-wallet transfers
-    if !trx.to.is_empty() && is_contract_address(&trx) {
+    // Skip regular wallet-to-wallet transfers (EOAs)
+    if !trx.to.is_empty() && is_contract_address(&trx, &block) {
             let contract_addr = hex::encode(&trx.to);
             let from_addr = hex::encode(&trx.from);
             
