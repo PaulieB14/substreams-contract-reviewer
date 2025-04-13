@@ -120,8 +120,9 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
     let day_timestamp = (block.timestamp().seconds / 86400) * 86400; // Normalize to day
 
     for trx in block.transactions() {
-        // Only process transactions that have a 'to' address and are contract calls
-        if !trx.to.is_empty() && is_contract_address(&trx) {
+    // Only process transactions that have a 'to' address and are contract calls
+    // Skip regular wallet-to-wallet transfers
+    if !trx.to.is_empty() && is_contract_address(&trx) {
             let contract_addr = hex::encode(&trx.to);
             let from_addr = hex::encode(&trx.from);
             
