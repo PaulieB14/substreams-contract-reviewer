@@ -1,0 +1,372 @@
+{
+  "most_active_contracts": [
+    {
+      "address": "d2756d42acc426165d865c0473084c416557e682",
+      "first_interaction_block": 22000728,
+      "last_interaction_block": 22000728,
+      "total_calls": 99,
+      "unique_wallets": 99,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "84bdf8f383bc5c9139e27202f0885c33bc96ccba",
+      "first_interaction_block": 22000869,
+      "last_interaction_block": 22000869,
+      "total_calls": 66,
+      "unique_wallets": 66,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "9030a104a49141459f4b419bd6f56e4ba6fcd800",
+      "first_interaction_block": 22000990,
+      "last_interaction_block": 22000990,
+      "total_calls": 60,
+      "unique_wallets": 60,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000132,
+      "last_interaction_block": 22000132,
+      "total_calls": 50,
+      "unique_wallets": 49,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0204081632653061
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000201,
+      "last_interaction_block": 22000201,
+      "total_calls": 47,
+      "unique_wallets": 44,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0681818181818181
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000346,
+      "last_interaction_block": 22000346,
+      "total_calls": 47,
+      "unique_wallets": 46,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0217391304347827
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000162,
+      "last_interaction_block": 22000162,
+      "total_calls": 46,
+      "unique_wallets": 42,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0952380952380953
+    },
+    {
+      "address": "89a8c847f41c0dfa6c8b88638bacca8a0b777da7",
+      "first_interaction_block": 22000233,
+      "last_interaction_block": 22000233,
+      "total_calls": 44,
+      "unique_wallets": 44,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000127,
+      "last_interaction_block": 22000127,
+      "total_calls": 40,
+      "unique_wallets": 40,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000827,
+      "last_interaction_block": 22000827,
+      "total_calls": 38,
+      "unique_wallets": 38,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    }
+  ],
+  "most_popular_contracts": [
+    {
+      "address": "d2756d42acc426165d865c0473084c416557e682",
+      "first_interaction_block": 22000728,
+      "last_interaction_block": 22000728,
+      "total_calls": 99,
+      "unique_wallets": 99,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "84bdf8f383bc5c9139e27202f0885c33bc96ccba",
+      "first_interaction_block": 22000869,
+      "last_interaction_block": 22000869,
+      "total_calls": 66,
+      "unique_wallets": 66,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "9030a104a49141459f4b419bd6f56e4ba6fcd800",
+      "first_interaction_block": 22000990,
+      "last_interaction_block": 22000990,
+      "total_calls": 60,
+      "unique_wallets": 60,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000132,
+      "last_interaction_block": 22000132,
+      "total_calls": 50,
+      "unique_wallets": 49,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0204081632653061
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000346,
+      "last_interaction_block": 22000346,
+      "total_calls": 47,
+      "unique_wallets": 46,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0217391304347827
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000201,
+      "last_interaction_block": 22000201,
+      "total_calls": 47,
+      "unique_wallets": 44,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0681818181818181
+    },
+    {
+      "address": "89a8c847f41c0dfa6c8b88638bacca8a0b777da7",
+      "first_interaction_block": 22000233,
+      "last_interaction_block": 22000233,
+      "total_calls": 44,
+      "unique_wallets": 44,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000162,
+      "last_interaction_block": 22000162,
+      "total_calls": 46,
+      "unique_wallets": 42,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0952380952380953
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000127,
+      "last_interaction_block": 22000127,
+      "total_calls": 40,
+      "unique_wallets": 40,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000827,
+      "last_interaction_block": 22000827,
+      "total_calls": 38,
+      "unique_wallets": 38,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    }
+  ],
+  "most_intensive_contracts": [
+    {
+      "address": "68d3a973e7272eb388022a5c6518d9b2a2e66fbf",
+      "first_interaction_block": 22000585,
+      "last_interaction_block": 22000585,
+      "total_calls": 5,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.5
+    },
+    {
+      "address": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "first_interaction_block": 22000119,
+      "last_interaction_block": 22000119,
+      "total_calls": 6,
+      "unique_wallets": 3,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000152,
+      "last_interaction_block": 22000152,
+      "total_calls": 6,
+      "unique_wallets": 3,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000195,
+      "last_interaction_block": 22000195,
+      "total_calls": 4,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.0
+    },
+    {
+      "address": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "first_interaction_block": 22000347,
+      "last_interaction_block": 22000347,
+      "total_calls": 6,
+      "unique_wallets": 3,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.0
+    },
+    {
+      "address": "68d3a973e7272eb388022a5c6518d9b2a2e66fbf",
+      "first_interaction_block": 22000663,
+      "last_interaction_block": 22000663,
+      "total_calls": 4,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 2.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000198,
+      "last_interaction_block": 22000198,
+      "total_calls": 9,
+      "unique_wallets": 5,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.8
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000292,
+      "last_interaction_block": 22000292,
+      "total_calls": 10,
+      "unique_wallets": 6,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.6666666666666667
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000564,
+      "last_interaction_block": 22000564,
+      "total_calls": 11,
+      "unique_wallets": 7,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.5714285714285714
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000782,
+      "last_interaction_block": 22000782,
+      "total_calls": 11,
+      "unique_wallets": 7,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.5714285714285714
+    }
+  ],
+  "newest_contracts": [
+    {
+      "address": "52baeb8c7ff235bccdbb41790600898cf53c36bc",
+      "first_interaction_block": 22000999,
+      "last_interaction_block": 22000999,
+      "total_calls": 2,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "dac17f958d2ee523a2206206994597c13d831ec7",
+      "first_interaction_block": 22000998,
+      "last_interaction_block": 22000998,
+      "total_calls": 26,
+      "unique_wallets": 24,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0833333333333333
+    },
+    {
+      "address": "7cb027917b27bcb5963c548657a008bf45b25bdc",
+      "first_interaction_block": 22000997,
+      "last_interaction_block": 22000997,
+      "total_calls": 2,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "eb5d4b79e95edb5567f3f9703fbd56a107905c0c",
+      "first_interaction_block": 22000996,
+      "last_interaction_block": 22000996,
+      "total_calls": 3,
+      "unique_wallets": 3,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "first_interaction_block": 22000995,
+      "last_interaction_block": 22000995,
+      "total_calls": 2,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "first_interaction_block": 22000994,
+      "last_interaction_block": 22000994,
+      "total_calls": 5,
+      "unique_wallets": 5,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "b326ae62522ae2aa4d5a808faa9bbc0c5b9e740f",
+      "first_interaction_block": 22000993,
+      "last_interaction_block": 22000993,
+      "total_calls": 2,
+      "unique_wallets": 2,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "66a9893cc07d91d95644aedd05d03f95e1dba8af",
+      "first_interaction_block": 22000992,
+      "last_interaction_block": 22000992,
+      "total_calls": 3,
+      "unique_wallets": 3,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "first_interaction_block": 22000991,
+      "last_interaction_block": 22000991,
+      "total_calls": 10,
+      "unique_wallets": 10,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    },
+    {
+      "address": "9030a104a49141459f4b419bd6f56e4ba6fcd800",
+      "first_interaction_block": 22000990,
+      "last_interaction_block": 22000990,
+      "total_calls": 60,
+      "unique_wallets": 60,
+      "interacting_wallets": "[",
+      "avg_calls_per_wallet": 1.0
+    }
+  ],
+  "total_contracts_analyzed": 998,
+  "analysis_timestamp": "2025-04-12T22:34:36.497236"
+}
