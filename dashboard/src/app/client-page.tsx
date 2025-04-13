@@ -39,7 +39,7 @@ export function ClientPage() {
         <div className="flex flex-col items-center space-y-4">
           <div className="h-16 w-16 animate-spin rounded-full border-t-4 border-b-4 border-primary"></div>
           <h2 className="text-xl font-semibold">Loading contract data...</h2>
-          <p className="text-sm text-muted-foreground">Fetching real blockchain data from Ethereum mainnet</p>
+          <p className="text-sm text-muted-foreground">Fetching verified contract data from Ethereum mainnet</p>
         </div>
       </div>
     );
@@ -83,7 +83,7 @@ export function ClientPage() {
           <StatsCard
             title="Total Smart Contracts Analyzed"
             value={data.total_contracts_analyzed}
-            description="Total number of unique smart contract addresses tracked"
+            description="Total number of unique verified smart contract addresses tracked"
           />
           <StatsCard
             title="Most Active Smart Contract Calls"
@@ -181,7 +181,7 @@ export function ClientPage() {
           <p>Last updated: {formattedTimestamp}</p>
           <p>Data source: Substreams Smart Contract Reviewer</p>
           <p className="font-semibold text-indigo-600 dark:text-indigo-400">
-            Using real blockchain data from Ethereum mainnet (3-month analysis with 1000 blocks)
+            Using real blockchain data from Ethereum mainnet for verified contracts (3-month analysis with 1000 blocks)
           </p>
           <p className="text-xs text-gray-500 mt-1">
             Data is aggregated across blocks to show meaningful patterns over time

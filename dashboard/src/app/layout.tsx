@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Ethereum Contract Reviewer Dashboard",
-  description: "Real-time analysis of smart contract usage across the Ethereum blockchain",
+  description: "Real-time analysis of verified smart contract usage across the Ethereum blockchain",
 };
 
 export default function RootLayout({

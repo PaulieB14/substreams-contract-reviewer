@@ -11,7 +11,7 @@ This project consists of two main components:
 
 ## Features
 
-- **Catch-All Contract Monitoring**: Tracks all smart contract addresses that receive transactions
+- **Verified Contract Monitoring**: Tracks only verified contract addresses from a predefined list
 - **Comprehensive Analytics**: Stores first/last interaction blocks, total calls, unique wallets, etc.
 - **Real-Time Processing**: Uses Substreams for efficient blockchain data processing
 - **Modern Dashboard**: Built with Next.js and shadcn/ui for a responsive user experience
