@@ -17,9 +17,10 @@ os.makedirs("output", exist_ok=True)
 os.makedirs("results", exist_ok=True)
 os.makedirs("dashboard", exist_ok=True)
 
-def run_substreams(start_block=16000000, block_count=1000):
+def run_substreams(start_block=17500000, block_count=50):
     """Run Substreams CLI and return the output."""
     print("Running Substreams CLI to get real blockchain data...")
+    print(f"Processing {block_count} blocks starting from block {start_block}")
     
     # Check if API key is set
     api_key = os.environ.get("SUBSTREAMS_API_KEY")
@@ -39,13 +40,14 @@ def run_substreams(start_block=16000000, block_count=1000):
         "--production-mode"                        # Use production mode for better performance
     ]
     
-    # Run the command
+    # Run the command with a timeout
     try:
         result = subprocess.run(
             cmd,
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=300  # 5-minute timeout
         )
         print("Substreams CLI executed successfully!")
         return json.loads(result.stdout)
