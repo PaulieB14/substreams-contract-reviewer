@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "next build",
+  "outputDirectory": ".next",
+  "routes": [
+    {
+      "src": "/results/(.*)",
+      "dest": "/results/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

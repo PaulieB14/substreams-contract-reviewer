@@ -19,8 +19,11 @@ export interface ContractAnalysis {
 
 export async function getContractData(): Promise<ContractAnalysis> {
   try {
+    // Get the base URL from environment variables or use an empty string for relative paths
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
+    
     // Fetch data from a static JSON file in the public directory
-    const response = await fetch('/results/latest_analysis.json');
+    const response = await fetch(`${baseUrl}/results/latest_analysis.json`);
     
     if (!response.ok) {
       throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
