@@ -101,7 +101,23 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
     let mut contract_map: HashMap<String, ContractUsage> = HashMap::new();
     let day_timestamp = (block.timestamp().seconds / 86400) * 86400; // Normalize to day
 
-    // Process call traces instead of transactions for more accurate contract detection
+    // First pass: identify contract creations to build a set of known contracts
+    let mut known_contracts: std::collections::HashSet<String> = std::collections::HashSet::new();
+    
+    // Add contract creations from this block
+    for tx in block.transactions() {
+        // Check if this is a contract creation (to is empty)
+        if tx.to.is_empty() && tx.status == 1 { // 1 = Success
+            if let Some(receipt) = &tx.receipt {
+                if !receipt.contract_address.is_empty() {
+                    let addr = hex::encode(&receipt.contract_address);
+                    known_contracts.insert(addr);
+                }
+            }
+        }
+    }
+    
+    // Process call traces for contract interactions
     for call in block.calls() {
         // Only process CALL type (not delegatecall, create, etc.)
         if call.r#type != 0 {
@@ -113,16 +129,24 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
             continue;
         }
         
-        // Detect contracts based on call data (function selector)
-        let is_contract_call = call.input.len() > 4;
+        let contract_addr = hex::encode(&call.to);
         
-        if is_contract_call {
-            let contract_addr = hex::encode(&call.to);
+        // More strict contract verification:
+        // 1. Address is in our known contracts set from this block, OR
+        // 2. Address exists in our contract store already, OR
+        // 3. The call has function selector (input > 4 bytes) AND was successful
+        let store_key = format!("contract:{}", contract_addr).into_bytes();
+        let existing_contract = store.get_last(store_key.as_slice());
+        
+        let is_likely_contract = known_contracts.contains(&contract_addr) || 
+                                 existing_contract.is_some() || 
+                                 (call.input.len() > 4 && call.success);
+        
+        if is_likely_contract {
             let from_addr = hex::encode(&call.from);
             
             // Check if contract exists in store
-            let store_key = format!("contract:{}", contract_addr).into_bytes();
-            let is_new_contract = match store.get_last(store_key.as_slice()) {
+            let is_new_contract = match existing_contract {
                     Some(existing) => {
                         // Contract exists in store
                         let mut usage = contract_map.entry(contract_addr.clone()).or_insert(ContractUsage {
