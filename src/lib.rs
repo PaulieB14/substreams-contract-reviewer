@@ -101,25 +101,28 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
     let mut contract_map: HashMap<String, ContractUsage> = HashMap::new();
     let day_timestamp = (block.timestamp().seconds / 86400) * 86400; // Normalize to day
 
-    for trx in block.transactions() {
-        // Only analyze if there's a 'to' address (skip contract creation txs)
-        if !trx.to.is_empty() {
-            // Find the account in the block.accounts list
-            let account = block.accounts.iter().find(|a| a.address == trx.to);
-
-            // Smart contract check: must have bytecode deployed
-            let is_contract = account.map_or(false, |acc| !acc.code.is_empty());
-
-            // Optional: extra filtering to exclude ETH-only transfers
-            let is_function_call = trx.input.len() > 4;
-
-            if is_contract && is_function_call {
-                let contract_addr = hex::encode(&trx.to);
-                let from_addr = hex::encode(&trx.from);
-                
-                // Check if contract exists in store
-                let store_key = format!("contract:{}", contract_addr).into_bytes();
-                let is_new_contract = match store.get_last(store_key.as_slice()) {
+    // Process call traces instead of transactions for more accurate contract detection
+    for call in block.calls() {
+        // Only process CALL type (not delegatecall, create, etc.)
+        if call.r#type != 0 {
+            continue;
+        }
+        
+        // Skip if no 'to' address
+        if call.to.is_empty() {
+            continue;
+        }
+        
+        // Detect contracts based on call data (function selector)
+        let is_contract_call = call.input.len() > 4;
+        
+        if is_contract_call {
+            let contract_addr = hex::encode(&call.to);
+            let from_addr = hex::encode(&call.from);
+            
+            // Check if contract exists in store
+            let store_key = format!("contract:{}", contract_addr).into_bytes();
+            let is_new_contract = match store.get_last(store_key.as_slice()) {
                     Some(existing) => {
                         // Contract exists in store
                         let mut usage = contract_map.entry(contract_addr.clone()).or_insert(ContractUsage {
@@ -168,7 +171,6 @@ fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Resu
                 if let Some(usage) = contract_map.get_mut(&contract_addr) {
                     usage.is_new_contract = is_new_contract;
                 }
-            }
         }
     }
 
