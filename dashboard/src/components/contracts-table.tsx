@@ -121,8 +121,8 @@ export function ContractsTable({ contracts, title, showNewFlag = true }: Contrac
             <TableHeader>
               <TableRow>
                 <TableHead>
-                  <span title="Ethereum contract address (click to view on Etherscan)">
-                    Contract Address
+                  <span title="Ethereum address (click to view on Etherscan)">
+                    Address
                   </span>
                 </TableHead>
                 {showNewFlag && <TableHead className="text-center">

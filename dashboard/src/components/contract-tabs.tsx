@@ -42,25 +42,25 @@ export function ContractTabs({ data }: ContractTabsProps) {
       <TabsContent value="most-active" className="pt-4">
         <ContractsTable 
           contracts={data.most_active_contracts} 
-          title="Most Active Contracts (by Total Calls)" 
+          title="Most Active Smart Contracts (by Total Calls)" 
         />
       </TabsContent>
       <TabsContent value="most-popular" className="pt-4">
         <ContractsTable 
           contracts={data.most_popular_contracts} 
-          title="Most Popular Contracts (by Unique Wallets)" 
+          title="Most Popular Smart Contracts (by Unique Wallets)" 
         />
       </TabsContent>
       <TabsContent value="most-intensive" className="pt-4">
         <ContractsTable 
           contracts={data.most_intensive_contracts} 
-          title="Most Intensive Contracts (by Avg Calls/Wallet)" 
+          title="Most Intensive Smart Contracts (by Avg Calls/Wallet)" 
         />
       </TabsContent>
       <TabsContent value="newest" className="pt-4">
         <ContractsTable 
           contracts={data.newest_contracts} 
-          title="Newest Contracts (by First Interaction)" 
+          title="Newest Smart Contracts (by First Interaction)" 
         />
       </TabsContent>
     </Tabs>

@@ -63,7 +63,7 @@ export function DailyStatsChart({ dailyStats, title }: DailyStatsChartProps) {
         labels,
         datasets: [
           {
-            label: "Active Contracts",
+            label: "Active Smart Contracts",
             data: activeContractsData,
             borderColor: "rgb(59, 130, 246)",
             backgroundColor: "rgba(59, 130, 246, 0.1)",
@@ -71,7 +71,7 @@ export function DailyStatsChart({ dailyStats, title }: DailyStatsChartProps) {
             fill: true,
           },
           {
-            label: "New Contracts",
+            label: "New Smart Contracts",
             data: newContractsData,
             borderColor: "rgb(16, 185, 129)",
             backgroundColor: "rgba(16, 185, 129, 0.1)",
@@ -103,7 +103,7 @@ export function DailyStatsChart({ dailyStats, title }: DailyStatsChartProps) {
             beginAtZero: true,
             title: {
               display: true,
-              text: "Number of Contracts",
+              text: "Number of Smart Contracts",
             },
           },
           y1: {

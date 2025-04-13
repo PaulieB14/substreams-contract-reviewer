@@ -1,7 +1,9 @@
-use substreams_ethereum::pb::eth::v2::Block;
+use substreams_ethereum::pb::eth::v2::{Block, Transaction};
+use substreams_ethereum::pb::eth::v2::transaction::TransactionTraceStatus;
 use std::collections::HashMap;
 use substreams::store::{StoreGet, StoreGetProto, StoreSetProto};
 use std::cmp::min;
+use substreams_ethereum::Function;
 
 const MAX_WALLETS_PER_CONTRACT: usize = 100; // Limit number of wallets stored per contract
 const NEW_CONTRACT_WINDOW: u64 = 1000; // Number of blocks to consider a contract "new"
@@ -94,14 +96,32 @@ fn store_daily_stats(contracts: ContractUsages, store: StoreSetProto<DailyContra
     }
 }
 
+// Helper function to check if an address is a contract
+fn is_contract_address(trx: &Transaction) -> bool {
+    // Check if the transaction has trace status
+    if let Some(trace_status) = &trx.trace_status {
+        // Check if it's a contract call (has function calls)
+        match trace_status {
+            TransactionTraceStatus::Success(_) => {
+                // If the transaction has call data (beyond just a value transfer), it's likely a contract
+                return !trx.input.is_empty() && trx.input.len() > 4; // At least function selector (4 bytes)
+            }
+            _ => return false,
+        }
+    }
+    
+    // If no trace status, check if input data exists (contract interaction)
+    !trx.input.is_empty() && trx.input.len() > 4
+}
+
 #[substreams::handlers::map]
 fn map_contract_usage(block: Block, store: StoreGetProto<ContractUsage>) -> Result<ContractUsages, substreams::errors::Error> {
     let mut contract_map: HashMap<String, ContractUsage> = HashMap::new();
     let day_timestamp = (block.timestamp().seconds / 86400) * 86400; // Normalize to day
 
     for trx in block.transactions() {
-        // Only process transactions that have a 'to' address (contract calls)
-        if !trx.to.is_empty() {
+        // Only process transactions that have a 'to' address and are contract calls
+        if !trx.to.is_empty() && is_contract_address(&trx) {
             let contract_addr = hex::encode(&trx.to);
             let from_addr = hex::encode(&trx.from);
             

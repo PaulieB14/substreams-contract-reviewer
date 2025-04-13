@@ -76,29 +76,29 @@ export function ClientPage() {
         <CurrentBlock />
         
         <div className="flex items-center justify-between space-y-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm mt-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">Ethereum Contract Reviewer Dashboard</h2>
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-indigo-600 dark:text-indigo-400">Ethereum Smart Contract Reviewer Dashboard</h2>
         </div>
         
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <StatsCard
-            title="Total Contracts Analyzed"
+            title="Total Smart Contracts Analyzed"
             value={data.total_contracts_analyzed}
-            description="Total number of unique contract addresses tracked"
+            description="Total number of unique smart contract addresses tracked"
           />
           <StatsCard
-            title="Most Active Contract Calls"
+            title="Most Active Smart Contract Calls"
             value={data.most_active_contracts[0]?.total_calls || 0}
-            description="Highest number of calls to a single contract"
+            description="Highest number of calls to a single smart contract"
           />
           <StatsCard
             title="Most Unique Wallets"
             value={data.most_popular_contracts[0]?.unique_wallets || 0}
-            description="Highest number of unique wallets interacting with a contract"
+            description="Highest number of unique wallets interacting with a smart contract"
           />
           <StatsCard
             title="Highest Avg Calls/Wallet"
             value={data.most_intensive_contracts[0]?.avg_calls_per_wallet || 0}
-            description="Most intensive contract usage per wallet"
+            description="Most intensive smart contract usage per wallet"
           />
         </div>
         
@@ -106,7 +106,7 @@ export function ClientPage() {
           {/* Contract charts */}
           <ContractChart 
             contracts={data.most_active_contracts} 
-            title="Most Active Contracts" 
+            title="Most Active Smart Contracts" 
             type="calls"
             colorScheme={[
               'rgba(79, 70, 229, 0.7)', // Indigo
@@ -116,7 +116,7 @@ export function ClientPage() {
           />
           <ContractChart 
             contracts={data.most_popular_contracts} 
-            title="Most Popular Contracts" 
+            title="Most Popular Smart Contracts" 
             type="wallets"
             colorScheme={[
               'rgba(239, 68, 68, 0.7)', // Red
@@ -126,7 +126,7 @@ export function ClientPage() {
           />
           <ContractChart 
             contracts={data.most_intensive_contracts} 
-            title="Most Intensive Contracts" 
+            title="Most Intensive Smart Contracts" 
             type="avg"
             colorScheme={[
               'rgba(139, 92, 246, 0.7)', // Purple
@@ -141,16 +141,16 @@ export function ClientPage() {
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">
             <DailyStatsChart 
               dailyStats={data.daily_stats} 
-              title="Daily Contract Activity" 
+              title="Daily Smart Contract Activity" 
             />
             
             {/* New vs Returning Contracts */}
             {data.new_vs_returning_contracts && (
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-                <h2 className="text-xl font-bold mb-4">New vs Returning Contracts</h2>
+                <h2 className="text-xl font-bold mb-4">New vs Returning Smart Contracts</h2>
                 <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                    <p className="text-sm text-muted-foreground">New Contracts</p>
+                    <p className="text-sm text-muted-foreground">New Smart Contracts</p>
                     <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                       {data.new_vs_returning_contracts.new_contracts}
                     </p>
@@ -159,7 +159,7 @@ export function ClientPage() {
                     </p>
                   </div>
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                    <p className="text-sm text-muted-foreground">Returning Contracts</p>
+                    <p className="text-sm text-muted-foreground">Returning Smart Contracts</p>
                     <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                       {data.new_vs_returning_contracts.returning_contracts}
                     </p>
@@ -179,7 +179,7 @@ export function ClientPage() {
         
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm text-sm text-muted-foreground text-right">
           <p>Last updated: {formattedTimestamp}</p>
-          <p>Data source: Substreams Contract Reviewer</p>
+          <p>Data source: Substreams Smart Contract Reviewer</p>
           <p className="font-semibold text-indigo-600 dark:text-indigo-400">
             Using real blockchain data from Ethereum mainnet (3-month analysis with 1000 blocks)
           </p>
