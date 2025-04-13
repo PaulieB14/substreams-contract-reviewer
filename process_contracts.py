@@ -184,61 +184,26 @@ def run_substreams(start_block=22000000, block_count=None, days=None):
                     if "interactingWallets" in contract:
                         contract["interacting_wallets"] = contract["interactingWallets"]
                         del contract["interactingWallets"]
+                    
+                    # Handle new fields
+                    if "isNewContract" in contract:
+                        contract["is_new_contract"] = contract["isNewContract"].lower() == "true"
+                        del contract["isNewContract"]
+                    else:
+                        contract["is_new_contract"] = False
+                    
+                    if "dayTimestamp" in contract:
+                        contract["day_timestamp"] = int(contract["dayTimestamp"])
+                        del contract["dayTimestamp"]
+                    else:
+                        # Approximate day timestamp from block number if not available
+                        block_timestamp = contract["last_interaction_block"] * 12  # ~12 seconds per block
+                        contract["day_timestamp"] = (block_timestamp // 86400) * 86400
                 
                 return {"contracts": contracts}
             
-            print("Failed to parse non-standard JSON. Creating mock data for testing...")
-            
-            # Fallback to mock data if parsing fails
-            contracts = []
-            
-            # Popular DeFi and NFT contracts
-            contract_addresses = [
-                "0x7a250d5630b4cf539739df2c5dacb4c659f2488d",  # Uniswap V2 Router
-                "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",  # Uniswap Token
-                "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",  # WETH
-                "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",  # USDC
-                "0x6b175474e89094c44da98b954eedeac495271d0f",  # DAI
-                "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",  # WBTC
-                "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d",  # BAYC
-                "0x60e4d786628fea6478f785a6d7e704777c86a7c6",  # MAYC
-                "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",  # MATIC
-                "0x514910771af9ca656af840dff83e8264ecf986ca",  # LINK
-                "0x5283d291dbcf85356a21ba090e6db59121208b44",  # Blur
-                "0x00000000006c3852cbef3e08e8df289169ede581",  # Seaport
-                "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85",  # ENS
-                "0x4d224452801aced8b2f0aebe155379bb5d594381",  # APE
-                "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce",  # SHIB
-                "0x1a4b46696b2bb4794eb3d4c26f1c55f9170fa4c5",  # BitDAO
-                "0x3845badade8e6dff049820680d1f14bd3903a5d0",  # SAND
-                "0x0d8775f648430679a709e98d2b0cb6250d2887ef",  # BAT
-                "0x6982508145454ce325ddbe47a25d4ec3d2311933",  # PEPE
-                "0x389999216860ab8e0175387a0c90e5c52522c945"   # FEI
-            ]
-            
-            for i, address in enumerate(contract_addresses):
-                # Generate realistic data with some variability
-                first_block = 22000000 - random.randint(0, 500000)
-                last_block = 22000000 + random.randint(0, 50000)
-                total_calls = random.randint(1000, 100000)
-                unique_wallets = random.randint(100, 10000)
-                
-                # Generate some random wallet addresses
-                wallets = [
-                    "0x" + "".join(random.choice("0123456789abcdef") for _ in range(40))
-                    for _ in range(min(10, unique_wallets))  # Just include 10 sample wallets
-                ]
-                
-                contracts.append({
-                    "address": address,
-                    "first_interaction_block": first_block,
-                    "last_interaction_block": last_block,
-                    "total_calls": total_calls,
-                    "unique_wallets": unique_wallets,
-                    "interacting_wallets": wallets
-                })
-            
-            return {"contracts": contracts}
+            print("Failed to parse JSON output from Substreams.")
+            raise RuntimeError("Could not parse Substreams output and no fallback to mock data is allowed")
     except subprocess.SubprocessError as e:
         print(f"Error running Substreams CLI: {e}")
         print(f"Command output: {e.stdout if hasattr(e, 'stdout') else 'No output'}")
@@ -266,13 +231,55 @@ def analyze_contracts(contracts):
     # Find newest contracts (highest first_interaction_block)
     newest_contracts = sorted(contracts, key=lambda x: x["first_interaction_block"], reverse=True)[:10]
     
+    # Group contracts by day for time-based analysis
+    daily_stats = {}
+    for contract in contracts:
+        # If day_timestamp is not present, calculate it from block timestamp (approximate)
+        day_timestamp = contract.get("day_timestamp", 0)
+        if not day_timestamp and "last_interaction_block" in contract:
+            # Rough estimate: each block is ~12 seconds
+            block_timestamp = contract["last_interaction_block"] * 12
+            day_timestamp = (block_timestamp // 86400) * 86400
+            contract["day_timestamp"] = day_timestamp
+        
+        if day_timestamp not in daily_stats:
+            daily_stats[day_timestamp] = {
+                "day_timestamp": day_timestamp,
+                "active_contracts": 0,
+                "new_contracts": 0,
+                "total_calls": 0,
+                "unique_wallets": 0
+            }
+        
+        daily_stats[day_timestamp]["active_contracts"] += 1
+        daily_stats[day_timestamp]["total_calls"] += contract["total_calls"]
+        daily_stats[day_timestamp]["unique_wallets"] += contract["unique_wallets"]
+        
+        # Check if this is a new contract
+        is_new = contract.get("is_new_contract", False)
+        if is_new:
+            daily_stats[day_timestamp]["new_contracts"] += 1
+    
+    # Convert daily_stats to a list and sort by timestamp
+    daily_stats_list = list(daily_stats.values())
+    daily_stats_list.sort(key=lambda x: x["day_timestamp"])
+    
+    # Count new vs returning contracts
+    new_contracts = sum(1 for c in contracts if c.get("is_new_contract", False))
+    returning_contracts = len(contracts) - new_contracts
+    
     return {
         "most_active_contracts": most_active,
         "most_popular_contracts": most_popular,
         "most_intensive_contracts": most_intensive,
         "newest_contracts": newest_contracts,
         "total_contracts_analyzed": len(contracts),
-        "analysis_timestamp": datetime.now().isoformat()
+        "analysis_timestamp": datetime.now().isoformat(),
+        "daily_stats": daily_stats_list,
+        "new_vs_returning_contracts": {
+            "new_contracts": new_contracts,
+            "returning_contracts": returning_contracts
+        }
     }
 
 # Get real data from Substreams with a time-based approach

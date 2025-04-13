@@ -5,6 +5,7 @@ import { StatsCard } from "@/components/stats-card";
 import { ContractTabs } from "@/components/contract-tabs";
 import { ContractChart } from "@/components/contract-chart";
 import { CurrentBlock } from "@/components/current-block";
+import { DailyStatsChart } from "@/components/daily-stats-chart";
 import { ContractAnalysis, getContractData } from "@/lib/data";
 
 export function ClientPage() {
@@ -17,6 +18,9 @@ export function ClientPage() {
       try {
         setLoading(true);
         const contractData = await getContractData();
+        console.log("Fetched contract data:", contractData);
+        console.log("Daily stats:", contractData.daily_stats);
+        console.log("New vs returning:", contractData.new_vs_returning_contracts);
         setData(contractData);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch data'));
@@ -99,7 +103,7 @@ export function ClientPage() {
         </div>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Import the ContractChart component at the top of the file */}
+          {/* Contract charts */}
           <ContractChart 
             contracts={data.most_active_contracts} 
             title="Most Active Contracts" 
@@ -131,6 +135,43 @@ export function ClientPage() {
             ]}
           />
         </div>
+        
+        {/* Daily Stats Chart - shows time-based analysis */}
+        {data.daily_stats && data.daily_stats.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-2">
+            <DailyStatsChart 
+              dailyStats={data.daily_stats} 
+              title="Daily Contract Activity" 
+            />
+            
+            {/* New vs Returning Contracts */}
+            {data.new_vs_returning_contracts && (
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
+                <h2 className="text-xl font-bold mb-4">New vs Returning Contracts</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <p className="text-sm text-muted-foreground">New Contracts</p>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                      {data.new_vs_returning_contracts.new_contracts}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {((data.new_vs_returning_contracts.new_contracts / data.total_contracts_analyzed) * 100).toFixed(1)}% of total
+                    </p>
+                  </div>
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <p className="text-sm text-muted-foreground">Returning Contracts</p>
+                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                      {data.new_vs_returning_contracts.returning_contracts}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {((data.new_vs_returning_contracts.returning_contracts / data.total_contracts_analyzed) * 100).toFixed(1)}% of total
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
           <ContractTabs data={data} />

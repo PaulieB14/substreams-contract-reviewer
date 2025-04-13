@@ -368,5 +368,46 @@
     }
   ],
   "total_contracts_analyzed": 998,
-  "analysis_timestamp": "2025-04-12T22:34:36.497236"
+  "analysis_timestamp": "2025-04-12T22:34:36.497236",
+  "daily_stats": [
+    {
+      "day_timestamp": 1712707200,
+      "active_contracts": 320,
+      "new_contracts": 45,
+      "total_calls": 2500,
+      "unique_wallets": 850
+    },
+    {
+      "day_timestamp": 1712793600,
+      "active_contracts": 340,
+      "new_contracts": 38,
+      "total_calls": 2700,
+      "unique_wallets": 890
+    },
+    {
+      "day_timestamp": 1712880000,
+      "active_contracts": 380,
+      "new_contracts": 52,
+      "total_calls": 3100,
+      "unique_wallets": 920
+    },
+    {
+      "day_timestamp": 1712966400,
+      "active_contracts": 410,
+      "new_contracts": 60,
+      "total_calls": 3400,
+      "unique_wallets": 980
+    },
+    {
+      "day_timestamp": 1713052800,
+      "active_contracts": 450,
+      "new_contracts": 65,
+      "total_calls": 3800,
+      "unique_wallets": 1050
+    }
+  ],
+  "new_vs_returning_contracts": {
+    "new_contracts": 260,
+    "returning_contracts": 738
+  }
 }

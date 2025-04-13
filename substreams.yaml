@@ -20,5 +20,20 @@ modules:
     initialBlock: 0
     inputs:
       - source: sf.ethereum.type.v2.Block
+      - store: store_contract_stats
     output:
       type: proto:contract_reviewer.ContractUsages
+
+  - name: store_contract_stats
+    kind: store
+    updatePolicy: set
+    valueType: proto:contract_reviewer.ContractUsage
+    inputs:
+      - map: map_contract_usage
+
+  - name: store_daily_stats
+    kind: store
+    updatePolicy: set
+    valueType: proto:contract_reviewer.DailyContractStats
+    inputs:
+      - map: map_contract_usage
