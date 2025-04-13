@@ -14,9 +14,11 @@ Cargo.lock
 # Exclude package.json from being ignored
 !package.json
 !*/package.json
-# But still ignore data files
+# But still ignore data files except latest_analysis.json
 /results/*.json
+!/results/latest_analysis.json
 /dashboard/public/results/*.json
+!/dashboard/public/results/latest_analysis.json
 *.log
 last_block.txt
 
