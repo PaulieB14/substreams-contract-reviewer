@@ -16,9 +16,9 @@ python3 process_contracts.py
 echo "Copying data to dashboard..."
 ./scripts/maintenance/copy-data.sh
 
-# Deploy to Vercel from the project root
-echo "Deploying to Vercel..."
-vercel --prod
+# Deploy to Vercel from the project root with environment variables
+echo "Deploying to Vercel with environment variables..."
+vercel --prod -e NEXT_PUBLIC_BASE_URL=https://substreams-contract-reviewer.vercel.app
 
 echo ""
 echo "===== DEPLOYMENT COMPLETE ====="
